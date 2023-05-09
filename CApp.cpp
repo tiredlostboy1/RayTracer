@@ -1,5 +1,7 @@
 #include "CApp.h"
 
+#include <stdexcept>
+
 // default constructor
 CApp::CApp(){
     isRunning = true;
@@ -28,10 +30,10 @@ bool CApp::OnInit(){
     return true;
 }
 
-int CApp::OnExecute(){
+void CApp::OnExecute(){
     SDL_Event event;
     if(OnInit() == false){
-        return -1;
+        throw std::runtime_error("bye-bye!");
     }
 
     while(isRunning){

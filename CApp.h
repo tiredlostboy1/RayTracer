@@ -8,7 +8,7 @@ class CApp{
         CApp();
 
         bool OnInit();
-        int OnExecute();
+        void OnExecute();
         void OnEvent(SDL_Event * event);
         void OnLoop();
         void OnRender();

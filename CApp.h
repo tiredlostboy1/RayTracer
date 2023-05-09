@@ -7,8 +7,8 @@ class CApp{
     public:
         CApp();
 
-        int OnExecute();
         bool OnInit();
+        int OnExecute();
         void OnEvent(SDL_Event * event);
         void OnLoop();
         void OnRender();
@@ -16,9 +16,9 @@ class CApp{
 
     private:
 
-    //SDL2
-    
         bool isRunning;
+
+    //SDL2
         SDL_Window * pWindow;
         SDL_Renderer * pRenderer;
 };

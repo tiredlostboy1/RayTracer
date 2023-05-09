@@ -3,25 +3,24 @@
 
 #include <SDL2/SDL.h>
 
-class CApp{
-    public:
-        CApp();
+class CApp
+{
+public:
+    CApp();
 
-        bool OnInit();
-        void OnExecute();
-        void OnEvent(SDL_Event * event);
-        void OnLoop();
-        void OnRender();
-        void OnExit();
+    bool OnInit();
+    void OnExecute();
+    void OnEvent(SDL_Event *event);
+    void OnLoop();
+    void OnRender();
+    void OnExit();
 
-    private:
+private:
+    bool isRunning;
 
-        bool isRunning;
-
-    //SDL2
-        SDL_Window * pWindow;
-        SDL_Renderer * pRenderer;
+    // SDL2
+    SDL_Window *pWindow;
+    SDL_Renderer *pRenderer;
 };
-
 
 #endif

@@ -1,71 +1,83 @@
-#include "CApp.h"
+#include "CApp.hpp"
 
 #include <stdexcept>
 
 // default constructor
-CApp::CApp(){
+CApp::CApp()
+{
     isRunning = true;
     pWindow = nullptr;
     pRenderer = nullptr;
 }
 
-bool CApp::OnInit(){
-    if(SDL_Init(SDL_INIT_EVERYTHING) < 0){
+bool CApp::OnInit()
+{
+    if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+    {
         return false;
     }
 
     pWindow = SDL_CreateWindow(
-                                "Ray Tracer", 
-                                SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                1280, 720, 
-                                SDL_WINDOW_SHOWN
-                              );
+        "Ray Tracer",
+        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+        1280, 720,
+        SDL_WINDOW_SHOWN);
 
-    if(pWindow != nullptr){
+    if (pWindow != nullptr)
+    {
         pRenderer = SDL_CreateRenderer(pWindow, -1, 0);
     }
-    else {
+    else
+    {
         return false;
     }
     return true;
 }
 
-void CApp::OnExecute(){
+void CApp::OnExecute()
+{
     SDL_Event event;
-    if(OnInit() == false){
+    if (OnInit() == false)
+    {
         throw std::runtime_error("bye-bye!");
     }
 
-    while(isRunning){
-        while(SDL_PollEvent(&event) != 0){
+    while (isRunning)
+    {
+        while (SDL_PollEvent(&event) != 0)
+        {
             OnEvent(&event);
         }
 
-       OnLoop();
-       OnRender(); 
+        OnLoop();
+        OnRender();
     }
 }
 
-void CApp::OnEvent(SDL_Event * event){
-    if(event->type == SDL_QUIT){
+void CApp::OnEvent(SDL_Event *event)
+{
+    if (event->type == SDL_QUIT)
+    {
         isRunning = false;
     }
 }
 
-void CApp::OnLoop(){
-
+void CApp::OnLoop()
+{
 }
 
-void CApp::OnRender(){
+void CApp::OnRender()
+{
     // setting background to white
     SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 255);
     SDL_RenderClear(pRenderer);
 
-    //result
+    // result
     SDL_RenderPresent(pRenderer);
 }
 
-void CApp::OnExit(){
+void CApp::OnExit()
+{
     SDL_DestroyRenderer(pRenderer);
     SDL_DestroyWindow(pWindow);
     pWindow = nullptr;

@@ -12,7 +12,7 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
 # Add the executable target
-add_executable(raytracer main.cpp CApp.cpp CApp.hpp)
+add_executable(raytracer main.cpp CApp.cpp CApp.hpp Image.cpp Image.hpp)
 
 # Link against the SDL2 library
 target_link_libraries(raytracer ${SDL2_LIBRARIES})

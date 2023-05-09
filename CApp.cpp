@@ -23,9 +23,20 @@ bool CApp::OnInit()
         1280, 720,
         SDL_WINDOW_SHOWN);
 
-    if (pWindow != nullptr)
+    if (pWindow)
     {
         pRenderer = SDL_CreateRenderer(pWindow, -1, 0);
+
+        //initialize the Image instance
+        m_image.Initialize(1280, 720, pRenderer);
+
+        for(int x = 0; x < 1280; ++x){
+            for(int y = 0; y < 720; ++y){
+                double red = (static_cast<double>(x)/1280.0) * 255.0;
+                double green = (static_cast<double>(x)/720.0) * 255.0;
+                m_image.SetPixel(x, y, red, green, 0.0);
+            }
+        }
     }
     else
     {
@@ -37,7 +48,7 @@ bool CApp::OnInit()
 void CApp::OnExecute()
 {
     SDL_Event event;
-    if (OnInit() == false)
+    if (!OnInit())
     {
         throw std::runtime_error("bye-bye!");
     }
@@ -71,6 +82,9 @@ void CApp::OnRender()
     // setting background to white
     SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 255);
     SDL_RenderClear(pRenderer);
+
+    //displaty the image
+    m_image.Display();
 
     // result
     SDL_RenderPresent(pRenderer);

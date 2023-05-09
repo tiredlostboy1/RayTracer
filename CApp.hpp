@@ -3,6 +3,8 @@
 
 #include <SDL2/SDL.h>
 
+#include "Image.hpp"
+
 class CApp
 {
 public:
@@ -16,6 +18,8 @@ public:
     void OnExit();
 
 private:
+    Image m_image;
+
     bool isRunning;
 
     // SDL2

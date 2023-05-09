@@ -1,15 +1,16 @@
-#include "CApp.h"
+#include "CApp.hpp"
 #include <iostream>
 
-int main(int argc, char* argv[]){
-
+int main(int argc, char *argv[])
+{
     CApp theApp;
-    try{
-    theApp.OnExecute();
-    } 
-    catch(...){
+    try
+    {
+        theApp.OnExecute();
+    }
+    catch (...)
+    {
         std::cerr << "good-bye!";
     }
     return 0;
-
 }

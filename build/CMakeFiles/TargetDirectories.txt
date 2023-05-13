@@ -1,3 +1,0 @@
-/home/tiredlostboy/RayTracer/build/CMakeFiles/raytracer.dir
-/home/tiredlostboy/RayTracer/build/CMakeFiles/edit_cache.dir
-/home/tiredlostboy/RayTracer/build/CMakeFiles/rebuild_cache.dir

@@ -1,8 +1,10 @@
 #include "Image.hpp"
 
-Image::Image() : m_xSize(0),
-                 m_ySize(0),
-                 m_pTexture(nullptr) {}
+Image::Image() 
+: m_xSize(0)
+, m_ySize(0)
+, m_pTexture(nullptr) 
+{}
 
 Image::~Image()
 {

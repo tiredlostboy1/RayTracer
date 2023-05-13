@@ -1,7 +1,7 @@
 #include "CApp.hpp"
 #include <iostream>
 
-int main(int argc, char *argv[])
+int main()
 {
     CApp theApp;
     try

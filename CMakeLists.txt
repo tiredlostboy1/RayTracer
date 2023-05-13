@@ -15,12 +15,14 @@ include_directories(${SDL2_INCLUDE_DIRS})
 add_subdirectory(CApp)
 add_subdirectory(Image)
 add_subdirectory(Scene)
+add_subdirectory(Ray)
+add_subdirectory(Camera)
 
 # Define the executable target
 add_executable(RayTracer main.cpp)
 
 # Link against the libraries from subdirectories
-target_link_libraries(RayTracer ${SDL2_LIBRARIES} CApp Image Scene)
+target_link_libraries(RayTracer ${SDL2_LIBRARIES} CApp Image Scene Ray Camera)
 
 # The executable is in source dir
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}")

@@ -1,13 +1,11 @@
 #include "CApp.hpp"
-
+#include "../Math/vector.h"
 #include <stdexcept>
 
 // default constructor
 CApp::CApp()
+    : isRunning(true), pWindow(nullptr), pRenderer(nullptr)
 {
-    isRunning = true;
-    pWindow = nullptr;
-    pRenderer = nullptr;
 }
 
 bool CApp::OnInit()
@@ -27,10 +25,33 @@ bool CApp::OnInit()
     {
         pRenderer = SDL_CreateRenderer(pWindow, -1, 0);
 
-        //initialize the Image instance
+        // initialize the Image instance
         m_image.Initialize(1280, 720, pRenderer);
 
+        // Test the camera class
+        Camera testCamera;
+        testCamera.SetPosition(qbVector<double>(std::vector<double>{0.0, 0.0, 0.0}));
+        testCamera.SetLookAt(qbVector<double>(std::vector<double>{0.0, 2.0, 0.0}));
+        testCamera.SetUp(qbVector<double>(std::vector<double>{0.0, 0.0, 1.0}));
+        testCamera.SetLength(1.0);
+        testCamera.SetAspect(1.0);
+        testCamera.SetHorizontalSize(1.0);
+        testCamera.UpdateCameraGeometry();
+
+        //Get the screen centre and U, V vectors and display
+        auto screenCentre = testCamera.GetScreenCentre();
+        auto screenU = testCamera.GetU();
+        auto screenV = testCamera.GetV();
+
+        //display to the ternimal
+        std::cout << "Camera screen centre: " << std::endl;
+        PrintVector(screenCentre);
+        std::cout << "\nCamera U vector: " << std::endl;
+        PrintVector(screenU);
+        std::cout << "\nCamera V vector: " << std::endl;
+        PrintVector(screenV);
     }
+
     else
     {
         return false;
@@ -76,10 +97,10 @@ void CApp::OnRender()
     SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 255);
     SDL_RenderClear(pRenderer);
 
-    //render the scene
+    // render the scene
     m_scene.Render(m_image);
 
-    //displaty the image
+    // displaty the image
     m_image.Display();
 
     // result
@@ -92,4 +113,15 @@ void CApp::OnExit()
     SDL_DestroyWindow(pWindow);
     pWindow = nullptr;
     SDL_Quit();
+}
+
+// PRIVATE FUNCTIONS
+
+void CApp::PrintVector(const qbVector<double> &inputVector)
+{
+    int nRows = inputVector.GetNumDims();
+    for (int row = 0; row < nRows; ++row)
+    {
+        std::cout << std::fixed << std::setprecision(3) << inputVector.GetElement(row) << std::endl;
+    }
 }

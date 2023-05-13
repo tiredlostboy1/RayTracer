@@ -5,6 +5,7 @@
 
 #include "../Image/Image.hpp"
 #include "../Scene/Scene.hpp"
+#include "../Camera/Camera.hpp"
 
 class CApp
 {
@@ -19,6 +20,8 @@ public:
     void OnExit();
 
 private:
+
+    void PrintVector(const qbVector<double>& inputVector);
 
     //image class instance
     Image m_image;

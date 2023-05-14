@@ -6,6 +6,11 @@ GTform::GTform()
     m_bcktfm.SetToIdentity();
 }
 
+GTform::GTform(const GTform &other)
+    : m_fwdtfm(other.m_fwdtfm), m_bcktfm(other.m_bcktfm)
+{
+}
+
 GTform::~GTform()
 {
 }
@@ -158,6 +163,7 @@ GTform &GTform::operator=(const GTform &rhs)
         m_fwdtfm = rhs.m_fwdtfm;
         m_bcktfm = rhs.m_bcktfm;
     }
+
     return *this;
 }
 

@@ -13,6 +13,7 @@ class GTform
 {
 public:
     GTform();
+    GTform(const GTform &other);
     ~GTform();
 
     // Construct from a pair of matrixes

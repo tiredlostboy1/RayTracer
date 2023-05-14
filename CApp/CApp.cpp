@@ -28,34 +28,48 @@ bool CApp::OnInit()
         // initialize the Image instance
         m_image.Initialize(1280, 720, pRenderer);
 
-        // Test the camera class
-        Camera testCamera;
-        testCamera.SetPosition(qbVector<double>(std::vector<double>{0.0, 0.0, 0.0}));
-        testCamera.SetLookAt(qbVector<double>(std::vector<double>{0.0, 2.0, 0.0}));
-        testCamera.SetUp(qbVector<double>(std::vector<double>{0.0, 0.0, 1.0}));
-        testCamera.SetLength(1.0);
-        testCamera.SetAspect(1.0);
-        testCamera.SetHorizontalSize(1.0);
-        testCamera.UpdateCameraGeometry();
+        //Set background to white
+        SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 255);
+        SDL_RenderClear(pRenderer);
 
-        //Get the screen centre and U, V vectors and display
-        auto screenCentre = testCamera.GetScreenCentre();
-        auto screenU = testCamera.GetU();
-        auto screenV = testCamera.GetV();
+        //render the scene
+        m_scene.Render(m_image);
 
-        //display to the ternimal
-        std::cout << "Camera screen centre: " << std::endl;
-        PrintVector(screenCentre);
-        std::cout << "\nCamera U vector: " << std::endl;
-        PrintVector(screenU);
-        std::cout << "\nCamera V vector: " << std::endl;
-        PrintVector(screenV);
+        //display the image
+        m_image.Display();
+
+        //Show the result
+        SDL_RenderPresent(pRenderer);
+
+        // // Test the camera class
+        // Camera testCamera;
+        // testCamera.SetPosition(qbVector<double>(std::vector<double>{0.0, 0.0, 0.0}));
+        // testCamera.SetLookAt(qbVector<double>(std::vector<double>{0.0, 2.0, 0.0}));
+        // testCamera.SetUp(qbVector<double>(std::vector<double>{0.0, 0.0, 1.0}));
+        // testCamera.SetLength(1.0);
+        // testCamera.SetAspect(1.0);
+        // testCamera.SetHorizontalSize(1.0);
+        // testCamera.UpdateCameraGeometry();
+
+        // //Get the screen centre and U, V vectors and display
+        // auto screenCentre = testCamera.GetScreenCentre();
+        // auto screenU = testCamera.GetU();
+        // auto screenV = testCamera.GetV();
+
+        // //display to the ternimal
+        // std::cout << "Camera screen centre: " << std::endl;
+        // PrintVector(screenCentre);
+        // std::cout << "\nCamera U vector: " << std::endl;
+        // PrintVector(screenU);
+        // std::cout << "\nCamera V vector: " << std::endl;
+        // PrintVector(screenV);
     }
 
     else
     {
         return false;
     }
+
     return true;
 }
 
@@ -93,18 +107,18 @@ void CApp::OnLoop()
 
 void CApp::OnRender()
 {
-    // setting background to white
-    SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 255);
-    SDL_RenderClear(pRenderer);
+    // // setting background to white
+    // SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 255);
+    // SDL_RenderClear(pRenderer);
 
-    // render the scene
-    m_scene.Render(m_image);
+    // // render the scene
+    // m_scene.Render(m_image);
 
-    // displaty the image
-    m_image.Display();
+    // // displaty the image
+    // m_image.Display();
 
-    // result
-    SDL_RenderPresent(pRenderer);
+    // // result
+    // SDL_RenderPresent(pRenderer);
 }
 
 void CApp::OnExit()

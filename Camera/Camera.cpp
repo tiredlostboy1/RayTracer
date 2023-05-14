@@ -3,7 +3,10 @@
 #include <cmath>
 
 Camera::Camera()
-    : m_cameraPosition(qbVector<double>{std::vector<double>{0.0, -10.0, 0.0}}), m_cameraLookAt(qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}}), m_cameraUp(qbVector<double>{std::vector<double>{0.0, 0.0, 1.0}}), m_cameraLength(1.0), m_cameraHorizontalSize(1.0), m_cameraAspectRatio(1.0)
+    : m_cameraPosition(qbVector<double>{std::vector<double>{0.0, -10.0, 0.0}})
+    , m_cameraLookAt(qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}})
+    , m_cameraUp(qbVector<double>{std::vector<double>{0.0, 0.0, 1.0}})
+    , m_cameraLength(1.0), m_cameraHorizontalSize(1.0), m_cameraAspectRatio(1.0)
 {
 }
 
@@ -89,19 +92,23 @@ void Camera::UpdateCameraGeometry()
     m_projectionScreenV = qbVector<double>::cross(m_projectionScreenU, m_alignmentVector);
     m_projectionScreenV.Normalize();
 
-    //compute the position of the centre point of the screen
+    // compute the position of the centre point of the screen
     m_projectionScreenCentre = m_cameraPosition + (m_cameraLength * m_alignmentVector);
 
-    //modify the U, V vectors to match the size and aspect ratio
+    // modify the U, V vectors to match the size and aspect ratio
     m_projectionScreenU = m_projectionScreenU * m_cameraHorizontalSize;
     m_projectionScreenV = m_projectionScreenV * (m_cameraHorizontalSize / m_cameraAspectRatio);
 }
 
- Ray Camera::GenerateRay(float proScreenX, float proScreenY){
-    //compute the location of the screen point in world coordinates
+bool Camera::GenerateRay(float proScreenX, float proScreenY, Ray &cameraRay)
+{
+    // compute the location of the screen point in world coordinates
     qbVector<double> screenWorldPart1 = m_projectionScreenCentre + (m_projectionScreenU * proScreenX);
     qbVector<double> screenWorldCoordinate = screenWorldPart1 + (m_projectionScreenV * proScreenY);
 
-    //use this point along with the camera position to compute the ray
-    return Ray(m_cameraPosition, screenWorldCoordinate);
+    // use this point along with the camera position to compute the ray
+    cameraRay.m_point1 = m_cameraPosition;
+    cameraRay.m_point2 = screenWorldCoordinate;
+    cameraRay.m_lab = screenWorldCoordinate - m_cameraPosition;
+    return true;
 }

@@ -1,4 +1,4 @@
-#include "CApp.hpp"
+#include "./CApp/CApp.hpp"
 #include <iostream>
 
 int main()

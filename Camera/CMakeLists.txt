@@ -1,5 +1,7 @@
 # Define the library target
-add_library(Camera Camera.cpp Camera.hpp)
+add_library(Camera Camera.cpp Camera.hpp ../Ray/Ray.hpp ../Ray/Ray.cpp)
+
+include_directories(Ray)
 
 # Include directories
 target_include_directories(Camera PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

@@ -2,6 +2,7 @@
 #define OBJSPHERE_H
 #include "Objectbase.hpp"
 #include "../Ray/Ray.hpp"
+#include "../Gtfm/Gtfm.hpp"
 
 class ObjSphere : public ObjectBase
 {

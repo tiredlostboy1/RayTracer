@@ -20,10 +20,10 @@ public:
     // image to display
     void Display();
 
-    //functions to return dimensions of the image
+    // functions to return dimensions of the image
     int GetXSize();
     int GetYSize();
-    
+
 private:
     // arrays to store the data
     std::vector<std::vector<double>> m_rChannel;

@@ -29,7 +29,7 @@ public:
     double GetAspect();
 
     // funtions to generate a ray
-    bool GenerateRay(float proScreenX, float proScreenY, Ray& cameraRay);
+    bool GenerateRay(float proScreenX, float proScreenY, Ray &cameraRay);
 
     // function to update the camera geometry
     void UpdateCameraGeometry();

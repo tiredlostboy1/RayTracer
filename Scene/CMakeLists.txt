@@ -2,7 +2,8 @@
 add_library(Scene Scene.cpp Scene.hpp 
             ../Camera/Camera.cpp ../Camera/Camera.hpp 
             ../Image/Image.hpp ../Image/Image.cpp 
-            ../Objects/ObjSphere.hpp ../Objects/ObjSphere.cpp)
+            ../Objects/ObjSphere.hpp ../Objects/ObjSphere.cpp
+            ../Light/PointLight.hpp ../Light/PointLight.cpp)
 
 # Include directories
 target_include_directories(Scene PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

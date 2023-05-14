@@ -1,10 +1,9 @@
 #include "Image.hpp"
 
-Image::Image() 
-: m_xSize(0)
-, m_ySize(0)
-, m_pTexture(nullptr) 
-{}
+Image::Image()
+    : m_xSize(0), m_ySize(0), m_pTexture(nullptr)
+{
+}
 
 Image::~Image()
 {
@@ -35,14 +34,15 @@ void Image::SetPixel(const int x, const int y, const double red, const double gr
     m_bChannel.at(x).at(y) = blue;
 }
 
-    int Image::GetXSize(){
-        return m_xSize;
-    }
+int Image::GetXSize()
+{
+    return m_xSize;
+}
 
-    int Image::GetYSize(){
-        return m_ySize;
-    }
-    
+int Image::GetYSize()
+{
+    return m_ySize;
+}
 
 void Image::Display()
 {
@@ -60,8 +60,7 @@ void Image::Display()
 
     SDL_UpdateTexture(m_pTexture, nullptr, tempPixels, m_xSize * sizeof(uint32_t));
 
-    delete [] tempPixels;
-
+    delete[] tempPixels;
 
     SDL_Rect srcRect, bounds;
     srcRect.x = 0;
@@ -72,28 +71,31 @@ void Image::Display()
     SDL_RenderCopy(m_pRenderer, m_pTexture, &srcRect, &bounds);
 }
 
-void Image::InitTexture(){
+void Image::InitTexture()
+{
     uint32_t rmask = 0x000000ff, gmask = 0x0000ff00, bmask = 0x00ff0000, amask = 0xff000000;
 
-    if(m_pTexture){
+    if (m_pTexture)
+    {
         SDL_DestroyTexture(m_pTexture);
     }
 
-    SDL_Surface * tempSurface = SDL_CreateRGBSurface(0, m_xSize, m_ySize, 32, rmask, gmask, bmask, amask);
+    SDL_Surface *tempSurface = SDL_CreateRGBSurface(0, m_xSize, m_ySize, 32, rmask, gmask, bmask, amask);
     m_pTexture = SDL_CreateTextureFromSurface(m_pRenderer, tempSurface);
     SDL_FreeSurface(tempSurface);
 }
 
-uint32_t Image::ConvertColor(const double red, const double green, const double blue){
+uint32_t Image::ConvertColor(const double red, const double green, const double blue)
+{
     unsigned char r = static_cast<unsigned char>(red);
     unsigned char g = static_cast<unsigned char>(green);
     unsigned char b = static_cast<unsigned char>(blue);
 
-    #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-    uint32_t pixelColor = (b << 24) + (g << 16) + (b << 8) + 255;
-    #else
-    uint32_t pixelColor = (255 << 24) + (r << 16) + (g << 16) + b;
-    #endif
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    uint32_t pixelColor = (r << 24) + (g << 16) + (b << 8) + 255;
+#else
+    uint32_t pixelColor = (255 << 24) + (b << 16) + (g << 16) + r;
+#endif
 
     return pixelColor;
 }

@@ -28,17 +28,17 @@ bool CApp::OnInit()
         // initialize the Image instance
         m_image.Initialize(1280, 720, pRenderer);
 
-        //Set background to white
+        // Set background to white
         SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 255);
         SDL_RenderClear(pRenderer);
 
-        //render the scene
+        // render the scene
         m_scene.Render(m_image);
 
-        //display the image
+        // display the image
         m_image.Display();
 
-        //Show the result
+        // Show the result
         SDL_RenderPresent(pRenderer);
 
         // // Test the camera class

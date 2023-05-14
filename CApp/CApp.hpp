@@ -20,13 +20,12 @@ public:
     void OnExit();
 
 private:
+    void PrintVector(const qbVector<double> &inputVector);
 
-    void PrintVector(const qbVector<double>& inputVector);
-
-    //image class instance
+    // image class instance
     Image m_image;
 
-    //scene class instance
+    // scene class instance
     Scene m_scene;
 
     bool isRunning;

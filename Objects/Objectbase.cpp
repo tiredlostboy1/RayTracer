@@ -12,6 +12,7 @@ bool ObjectBase::TestIntersections(const Ray &castRay, qbVector<double> &intPoin
     return false;
 }
 
-bool ObjectBase::CloseEnough(const double f1, const double f2){
+bool ObjectBase::CloseEnough(const double f1, const double f2)
+{
     return std::fabs(f1 - f2) < std::numeric_limits<double>::epsilon();
 }

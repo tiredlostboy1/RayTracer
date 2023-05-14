@@ -3,10 +3,7 @@
 #include <cmath>
 
 Camera::Camera()
-    : m_cameraPosition(qbVector<double>{std::vector<double>{0.0, -10.0, 0.0}})
-    , m_cameraLookAt(qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}})
-    , m_cameraUp(qbVector<double>{std::vector<double>{0.0, 0.0, 1.0}})
-    , m_cameraLength(1.0), m_cameraHorizontalSize(1.0), m_cameraAspectRatio(1.0)
+    : m_cameraPosition(qbVector<double>{std::vector<double>{0.0, -10.0, 0.0}}), m_cameraLookAt(qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}}), m_cameraUp(qbVector<double>{std::vector<double>{0.0, 0.0, 1.0}}), m_cameraLength(1.0), m_cameraHorizontalSize(1.0), m_cameraAspectRatio(1.0)
 {
 }
 

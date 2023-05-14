@@ -10,6 +10,14 @@ Scene::Scene()
     m_camera.SetHorizontalSize(0.25);
     m_camera.SetAspect(16.0 / 9.0);
     m_camera.UpdateCameraGeometry();
+
+    // Construct a test sphere
+    m_objectVec.push_back(std::make_shared<ObjSphere>(ObjSphere()));
+
+    // construct a test light
+    m_lightVec.push_back(std::make_shared<PointLight>(PointLight()));
+    m_lightVec.at(0)->m_location = qbVector<double>{std::vector<double>{5.0, -10.0, 5.0}};
+    m_lightVec.at(0)->m_color = qbVector<double>{std::vector<double>{255.0, 255.0, 255.0}};
 }
 
 bool Scene::Render(Image &outputImage)
@@ -33,34 +41,52 @@ bool Scene::Render(Image &outputImage)
     {
         for (int y = 0; y < ySize; ++y)
         {
-            //Normalize the x and y coordinates
+            // Normalize the x and y coordinates
             double normX = (static_cast<double>(x) * xFact) - 1.0;
             double normY = (static_cast<double>(y) * yFact) - 1.0;
 
-            //Generate Ray for that pixel
+            // Generate Ray for that pixel
             m_camera.GenerateRay(normX, normY, cameraRay);
 
-            //test if we have valid intersection
-            bool validInt = m_testSphere.TestIntersections(cameraRay, intPoint, localNormal, localColor);
+            // test for intersections with all objects in the scene
+            for (const auto& currentObject : m_objectVec)
+            {
+                bool validInt = currentObject->TestIntersections(cameraRay, intPoint, localNormal, localColor);
+                if (validInt)
+                {
+                    // Compute intensity of illumination
+                    double intensity;
+                    qbVector<double> color{3};
+                    bool validIllum = false;
+                    for (auto currentLight : m_lightVec)
+                    {
+                        validIllum = currentLight->ComputeIllumination(intPoint, localNormal, m_objectVec, currentObject, color, intensity);
+                    }
 
-            if(validInt){
-                //compute the distance between the camera and the point of intersection
-                double dist = (intPoint - cameraRay.m_point1).norm();
-                minDist = std::min(minDist, dist);
-                maxDist = std::max(maxDist, dist);
+                    // compute the distance between the camera and the point of intersection
+                    double dist = (intPoint - cameraRay.m_point1).norm();
+                    minDist = std::min(minDist, dist);
+                    maxDist = std::max(maxDist, dist);
 
-
-
-                outputImage.SetPixel(x, y, 255.0 - ((dist - 9.0) / 0.94605) * 255.0, 0.0, 0.0);
-            }
-            else{
-                outputImage.SetPixel(x, y, 0.0, 0.0, 0.0);
+                    if (validIllum)
+                    {
+                        outputImage.SetPixel(x, y, 255.0 * intensity, 0.0, 0.0);
+                    }
+                    else
+                    {
+                        outputImage.SetPixel(x, y, 0.0, 0.0, 0.0);
+                    }
+                }
+                else
+                {
+                    outputImage.SetPixel(x, y, 0.0, 0.0, 0.0);
+                }
             }
         }
     }
 
     std::cout << "Minimum distance: " << minDist << std::endl;
-     std::cout << "Maximum distance: " << maxDist << std::endl;
+    std::cout << "Maximum distance: " << maxDist << std::endl;
 
     return true;
 }

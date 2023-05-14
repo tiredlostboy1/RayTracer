@@ -5,6 +5,9 @@ project(RayTracer)
 # Set the C++ standard to C++17
 set(CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast")
+
+
 # Find the SDL2 library
 find_package(SDL2 REQUIRED)
 

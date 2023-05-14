@@ -26,7 +26,7 @@ bool Scene::Render(Image &outputImage)
 
     double xFact = 1.0 / (static_cast<double>(xSize) / 2.0); // gives us value between [0;2]
     double yFact = 1.0 / (static_cast<double>(ySize) / 2.0); // gives us value between [0;2]
-    double miDist = std::numeric_limits<double>::max();
+    double minDist = std::numeric_limits<double>::max();
     double maxDist = std::numeric_limits<double>::min();
 
     for (int x = 0; x < xSize; ++x)
@@ -44,13 +44,23 @@ bool Scene::Render(Image &outputImage)
             bool validInt = m_testSphere.TestIntersections(cameraRay, intPoint, localNormal, localColor);
 
             if(validInt){
-                outputImage.SetPixel(x, y, 255.0, 0.0, 0.0);
+                //compute the distance between the camera and the point of intersection
+                double dist = (intPoint - cameraRay.m_point1).norm();
+                minDist = std::min(minDist, dist);
+                maxDist = std::max(maxDist, dist);
+
+
+
+                outputImage.SetPixel(x, y, 255.0 - ((dist - 9.0) / 0.94605) * 255.0, 0.0, 0.0);
             }
             else{
                 outputImage.SetPixel(x, y, 0.0, 0.0, 0.0);
             }
         }
     }
+
+    std::cout << "Minimum distance: " << minDist << std::endl;
+     std::cout << "Maximum distance: " << maxDist << std::endl;
 
     return true;
 }

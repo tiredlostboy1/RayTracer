@@ -16,3 +16,7 @@ bool ObjectBase::CloseEnough(const double f1, const double f2)
 {
     return std::fabs(f1 - f2) < std::numeric_limits<double>::epsilon();
 }
+
+void ObjectBase::SetTransformMatrix(const GTform& transformMatrix){
+    m_transformMatrix = transformMatrix;
+}

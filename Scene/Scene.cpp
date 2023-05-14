@@ -13,10 +13,31 @@ Scene::Scene()
 
     // Construct a test sphere
     m_objectVec.push_back(std::make_shared<ObjSphere>(ObjSphere()));
+    m_objectVec.push_back(std::make_shared<ObjSphere>(ObjSphere()));
+    m_objectVec.push_back(std::make_shared<ObjSphere>(ObjSphere()));
+
+    // Modify the spheres
+    GTform testMatrix1, testMatrix2, testMatrix3;
+    testMatrix1.SetTransform(qbVector<double>{std::vector<double>{-1.5, 0.0, 0.0}}, qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
+                             qbVector<double>{std::vector<double>{0.5, 0.5, 0.75}});
+
+    testMatrix2.SetTransform(qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}}, qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
+                             qbVector<double>{std::vector<double>{0.75, 0.5, 0.5}});
+
+    testMatrix2.SetTransform(qbVector<double>{std::vector<double>{1.5, 0.0, 0.0}}, qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
+                             qbVector<double>{std::vector<double>{0.75, 0.75, 0.75}});
+
+    m_objectVec.at(0)->SetTransformMatrix(testMatrix1);
+    m_objectVec.at(1)->SetTransformMatrix(testMatrix2);
+    m_objectVec.at(2)->SetTransformMatrix(testMatrix3);
+
+    m_objectVec.at(0)->m_baseColor = qbVector<double>{std::vector<double>{64.0, 128.0, 200.0}};
+    m_objectVec.at(1)->m_baseColor = qbVector<double>{std::vector<double>{255.0, 128.0, 0.0}};
+    m_objectVec.at(2)->m_baseColor = qbVector<double>{std::vector<double>{255.0, 200.0, 0.0}};
 
     // construct a test light
     m_lightVec.push_back(std::make_shared<PointLight>(PointLight()));
-    m_lightVec.at(0)->m_location = qbVector<double>{std::vector<double>{5.0, -10.0, 5.0}};
+    m_lightVec.at(0)->m_location = qbVector<double>{std::vector<double>{5.0, -10.0, -5.0}};
     m_lightVec.at(0)->m_color = qbVector<double>{std::vector<double>{255.0, 255.0, 255.0}};
 }
 
@@ -49,7 +70,7 @@ bool Scene::Render(Image &outputImage)
             m_camera.GenerateRay(normX, normY, cameraRay);
 
             // test for intersections with all objects in the scene
-            for (const auto& currentObject : m_objectVec)
+            for (const auto &currentObject : m_objectVec)
             {
                 bool validInt = currentObject->TestIntersections(cameraRay, intPoint, localNormal, localColor);
                 if (validInt)
@@ -70,16 +91,20 @@ bool Scene::Render(Image &outputImage)
 
                     if (validIllum)
                     {
-                        outputImage.SetPixel(x, y, 255.0 * intensity, 0.0, 0.0);
+                        // outputImage.SetPixel(x, y, 255.0 * intensity, 0.0, 0.0);
+                        outputImage.SetPixel(x, y, localColor.GetElement(0) * intensity, localColor.GetElement(1) * intensity,
+                                                 localColor.GetElement(2) * intensity);
                     }
                     else
                     {
-                        outputImage.SetPixel(x, y, 0.0, 0.0, 0.0);
+                        //leave this pixel unchanged
+                        //outputImage.SetPixel(x, y, 0.0, 0.0, 0.0);
                     }
                 }
                 else
                 {
-                    outputImage.SetPixel(x, y, 0.0, 0.0, 0.0);
+                    //leave this pixel unchanged
+                    //outputImage.SetPixel(x, y, 0.0, 0.0, 0.0);
                 }
             }
         }

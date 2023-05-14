@@ -1,7 +1,11 @@
 # Define the library target
-add_library(Objects Objectbase.hpp Objectbase.cpp ObjSphere.hpp ObjSphere.cpp ../Ray/Ray.hpp ../Ray/Ray.cpp)
+add_library(Objects Objectbase.hpp Objectbase.cpp 
+                    ObjSphere.hpp ObjSphere.cpp 
+                    ../Ray/Ray.hpp ../Ray/Ray.cpp 
+                    ../Gtfm/Gtfm.hpp ../Gtfm/Gtfm.cpp)
 
 include_directories(Ray)
+include_directories(Gtfm)
 
 # Include directories
 target_include_directories(Objects PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

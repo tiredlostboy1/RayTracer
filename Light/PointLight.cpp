@@ -9,10 +9,10 @@ PointLight::PointLight()
 PointLight::~PointLight() {}
 
 bool PointLight::ComputeIllumination(const qbVector<double> &intPoint,
-                         const qbVector<double> &localNormal,
-                         const std::vector<std::shared_ptr<ObjectBase>> &objectVec,
-                         const std::shared_ptr<ObjectBase> &currentObject,
-                         qbVector<double> &color, double &intensity)
+                                     const qbVector<double> &localNormal,
+                                     const std::vector<std::shared_ptr<ObjectBase>> &objectVec,
+                                     const std::shared_ptr<ObjectBase> &currentObject,
+                                     qbVector<double> &color, double &intensity)
 {
     // Construct a vector pointing from the intersection point to the light
     qbVector<double> lightDir = (m_location - intPoint).Normalized();
@@ -34,8 +34,10 @@ bool PointLight::ComputeIllumination(const qbVector<double> &intPoint,
     }
     else
     {
+        // we do have illumination
         color = m_color;
         intensity = m_intensity * (1.0 - (angle / 1.5708));
         return true;
     }
+    return true;
 }

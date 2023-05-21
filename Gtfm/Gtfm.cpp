@@ -51,7 +51,7 @@ void GTform::SetTransform(const qbVector<double> &translation,
     translationMatrix.SetElement(1, 3, translation.GetElement(1));
     translationMatrix.SetElement(2, 3, translation.GetElement(2));
 
-    // rotation matrix
+    // Rotation matrices.
     rotationMatrixZ.SetElement(0, 0, cos(rotation.GetElement(2)));
     rotationMatrixZ.SetElement(0, 1, -sin(rotation.GetElement(2)));
     rotationMatrixZ.SetElement(1, 0, sin(rotation.GetElement(2)));
@@ -67,7 +67,7 @@ void GTform::SetTransform(const qbVector<double> &translation,
     rotationMatrixX.SetElement(2, 1, sin(rotation.GetElement(0)));
     rotationMatrixX.SetElement(2, 2, cos(rotation.GetElement(0)));
 
-    // scale matrix
+    // And the scale matrix.
     scaleMatrix.SetElement(0, 0, scale.GetElement(0));
     scaleMatrix.SetElement(1, 1, scale.GetElement(1));
     scaleMatrix.SetElement(2, 2, scale.GetElement(2));
@@ -79,7 +79,7 @@ void GTform::SetTransform(const qbVector<double> &translation,
                rotationMatrixY *
                rotationMatrixZ;
 
-    // compute the backwards transform
+    // Compute the backwards transform.
     m_bcktfm = m_fwdtfm;
     m_bcktfm.Inverse();
 }
@@ -152,8 +152,9 @@ GTform operator*(const GTform &lhs, const GTform &rhs)
     bckResult.Inverse();
 
     // form the final result
-
-    return GTform(fwdResult, bckResult);
+    GTform finalResult(fwdResult, bckResult);
+    
+    return finalResult;
 }
 
 GTform &GTform::operator=(const GTform &rhs)

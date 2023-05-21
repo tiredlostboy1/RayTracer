@@ -3,6 +3,7 @@ add_library(Scene Scene.cpp Scene.hpp
             ../Camera/Camera.cpp ../Camera/Camera.hpp 
             ../Image/Image.hpp ../Image/Image.cpp 
             ../Objects/ObjSphere.hpp ../Objects/ObjSphere.cpp
+            ../Objects/ObjectPlane.hpp ../Objects/ObjectPlane.cpp
             ../Light/PointLight.hpp ../Light/PointLight.cpp)
 
 # Include directories

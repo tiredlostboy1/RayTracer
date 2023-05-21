@@ -1,6 +1,7 @@
 # Define the library target
 add_library(Objects Objectbase.hpp Objectbase.cpp 
                     ObjSphere.hpp ObjSphere.cpp 
+                    ObjectPlane.hpp ObjectPlane.hpp
                     ../Ray/Ray.hpp ../Ray/Ray.cpp 
                     ../Gtfm/Gtfm.hpp ../Gtfm/Gtfm.cpp)
 

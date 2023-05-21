@@ -7,6 +7,7 @@
 #include "../Image/Image.hpp"
 #include "../Camera/Camera.hpp"
 #include "../Objects/ObjSphere.hpp"
+#include "../Objects/ObjectPlane.hpp"
 #include "../Light/PointLight.hpp"
 
 class Scene

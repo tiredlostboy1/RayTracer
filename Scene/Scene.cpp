@@ -3,16 +3,31 @@
 
 Scene::Scene()
 {
-    // create material
+    // create materials
     auto TestMaterial = std::make_shared<SimpleMaterial>(SimpleMaterial());
+    auto TestMaterial2 = std::make_shared<SimpleMaterial>(SimpleMaterial());
+    auto TestMaterial3 = std::make_shared<SimpleMaterial>(SimpleMaterial());
+    auto TestMaterialfloor = std::make_shared<SimpleMaterial>(SimpleMaterial());
 
-    // setup the material
+    // setup the materials
     TestMaterial->m_baseColor = qbVector<double>{std::vector<double>{0.25, 0.5, 0.8}};
     TestMaterial->m_reflectivity = 0.5;
     TestMaterial->m_shininess = 10.0;
 
+    TestMaterial2->m_baseColor = qbVector<double>{std::vector<double>{1.0, 0.5, 0.0}};
+    TestMaterial2->m_reflectivity = 0.75;
+    TestMaterial2->m_shininess = 10.0;
+
+    TestMaterial3->m_baseColor = qbVector<double>{std::vector<double>{1.0, 0.8, 0.5}};
+    TestMaterial3->m_reflectivity = 0.25;
+    TestMaterial3->m_shininess = 10.0;
+
+    TestMaterialfloor->m_baseColor = qbVector<double>{std::vector<double>{1.0, 1.0, 1.0}};
+    TestMaterialfloor->m_reflectivity = 0.5;
+    TestMaterialfloor->m_shininess = 100.0;
+
     // configure the camera
-    m_camera.SetPosition(qbVector<double>{std::vector<double>{5.0, -10.0, -1.0}});
+    m_camera.SetPosition(qbVector<double>{std::vector<double>{5.0, -10.0, -5.0}});
     m_camera.SetLookAt(qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}});
     m_camera.SetUp(qbVector<double>{std::vector<double>{0.0, 0.0, 1.0}});
     m_camera.SetHorizontalSize(0.25);
@@ -40,7 +55,7 @@ Scene::Scene()
 
     // Modify the spheres
     GTform testMatrix1, testMatrix2, testMatrix3;
-    testMatrix1.SetTransform(qbVector<double>{std::vector<double>{-1.75, 0.0, 0.0}},
+    testMatrix1.SetTransform(qbVector<double>{std::vector<double>{-1.25, -1.0, -1.5}},
                              qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
                              qbVector<double>{std::vector<double>{0.5, 0.5, 0.5}});
 
@@ -48,7 +63,7 @@ Scene::Scene()
                              qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
                              qbVector<double>{std::vector<double>{0.5, 0.5, 0.5}});
 
-    testMatrix3.SetTransform(qbVector<double>{std::vector<double>{2.0, 0.0, 0.0}},
+    testMatrix3.SetTransform(qbVector<double>{std::vector<double>{2.0, 0.0, -1.0}},
                              qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
                              qbVector<double>{std::vector<double>{0.5, 0.5, 0.5}});
 
@@ -60,10 +75,11 @@ Scene::Scene()
     m_objectVec.at(1)->m_baseColor = qbVector<double>{std::vector<double>{1.0, 0.5, 0.0}};
     m_objectVec.at(2)->m_baseColor = qbVector<double>{std::vector<double>{1.0, 0.8, 0.0}};
 
-    //assign the materials to objects
-    m_objectVec.at(0)-> AssignMaterial(TestMaterial);
-
-
+    // assign the materials to objects
+    m_objectVec.at(0)->AssignMaterial(TestMaterial3);
+    m_objectVec.at(1)->AssignMaterial(TestMaterial);
+    m_objectVec.at(2)->AssignMaterial(TestMaterial2);
+    m_objectVec.at(3)->AssignMaterial(TestMaterialfloor);
 
     // Construct a test light.
     m_lightVec.push_back(std::make_shared<PointLight>(PointLight()));
@@ -94,9 +110,10 @@ bool Scene::Render(Image &outputImage)
     double xFact = 1.0 / (static_cast<double>(xSize) / 2.0); // gives us value between [0;2]
     double yFact = 1.0 / (static_cast<double>(ySize) / 2.0); // gives us value between [0;2]
 
-    for (int x = 0; x < xSize; ++x)
+    for (int y = 0; y < ySize; ++y)
     {
-        for (int y = 0; y < ySize; ++y)
+        std::cout << "Processing line " << y << " of " << ySize << std::endl;
+        for (int x = 0; x < xSize; ++x)
         {
             // Normalize the x and y coordinates
             double normX = (static_cast<double>(x) * xFact) - 1.0;
@@ -119,6 +136,7 @@ bool Scene::Render(Image &outputImage)
                 if (closestObject->m_hasMaterial)
                 {
                     // use the material to compute the color
+                    MaterialBase::m_reflectionRayCount = 0;
                     qbVector<double> color = closestObject->m_pMaterial->ComputeColor(m_objectVec, m_lightVec,
                                                                                       closestObject, closestIntPoint,
                                                                                       closestLocalNormal, cameraRay);

@@ -22,12 +22,21 @@ qbVector<double> SimpleMaterial::ComputeColor(const std::vector<std::shared_ptr<
 
     diffColor = ComputeDiffuseColor(objectVec, lightVec, currentObject, intPoint, localNormal, m_baseColor);
 
+    // Compute the reflection component
+    if (m_reflectivity > 0.0)
+    {
+        refColor = ComputeReflectionColor(objectVec, lightVec, currentObject, intPoint, localNormal, cameraRay);
+    }
+
+    // combine reflection and diffuse components
+    matColor = (refColor * m_reflectivity) + (diffColor * (1 - m_reflectivity));
+
     if (m_shininess > 0.0)
     {
         spcColor = ComputeSpecular(objectVec, lightVec, intPoint, localNormal, cameraRay);
     }
 
-    matColor = diffColor + spcColor;
+    matColor = matColor + spcColor;
 
     return matColor;
 }
@@ -64,9 +73,9 @@ qbVector<double> SimpleMaterial::ComputeSpecular(const std::vector<std::shared_p
 
         for (auto sceneObject : objectVec)
         {
-            if (sceneObject->TestIntersections(lightRay, poi, poiNormal, poiColor))
+            validInt = sceneObject->TestIntersections(lightRay, poi, poiNormal, poiColor);
+            if (validInt)
             {
-                validInt = true;
                 break;
             }
         }
@@ -74,8 +83,7 @@ qbVector<double> SimpleMaterial::ComputeSpecular(const std::vector<std::shared_p
         if (!validInt)
         {
             qbVector<double> d = lightRay.m_lab;
-            //???????????????????????????????????????????????????????????????????????????????????????????????????????????????????
-            qbVector<double> r = d - 2.0 * (qbVector<double>::dot(d, localNormal) * localNormal);
+            qbVector<double> r = d - 2.0 * (qbVector<double>::dot(d, localNormal)) * localNormal;
             r.Normalize();
 
             // compute the dot product

@@ -23,12 +23,13 @@ add_subdirectory(Camera)
 add_subdirectory(Objects)
 add_subdirectory(Light)
 add_subdirectory(Gtfm)
+add_subdirectory(Material)
 
 # Define the executable target
 add_executable(RayTracer main.cpp)
 
 # Link against the libraries from subdirectories
-target_link_libraries(RayTracer ${SDL2_LIBRARIES} CApp Image Scene Ray Camera Objects Light Gtfm)
+target_link_libraries(RayTracer ${SDL2_LIBRARIES} CApp Image Scene Ray Camera Objects Light Gtfm Material)
 
 # The executable is in source dir
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}")

@@ -20,3 +20,9 @@ bool ObjectBase::CloseEnough(const double f1, const double f2)
 void ObjectBase::SetTransformMatrix(const GTform& transformMatrix){
     m_transformMatrix = transformMatrix;
 }
+
+bool ObjectBase::AssignMaterial(const std::shared_ptr<MaterialBase>& objectMaterial){
+    m_pMaterial = objectMaterial;
+    m_hasMaterial = true;
+    return m_hasMaterial;
+}

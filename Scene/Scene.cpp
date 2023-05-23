@@ -3,8 +3,16 @@
 
 Scene::Scene()
 {
+    // create material
+    auto TestMaterial = std::make_shared<SimpleMaterial>(SimpleMaterial());
+
+    // setup the material
+    TestMaterial->m_baseColor = qbVector<double>{std::vector<double>{0.25, 0.5, 0.8}};
+    TestMaterial->m_reflectivity = 0.5;
+    TestMaterial->m_shininess = 10.0;
+
     // configure the camera
-    m_camera.SetPosition(qbVector<double>{std::vector<double>{0.0, -10.0, -1.0}});
+    m_camera.SetPosition(qbVector<double>{std::vector<double>{5.0, -10.0, -1.0}});
     m_camera.SetLookAt(qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}});
     m_camera.SetUp(qbVector<double>{std::vector<double>{0.0, 0.0, 1.0}});
     m_camera.SetHorizontalSize(0.25);
@@ -32,17 +40,17 @@ Scene::Scene()
 
     // Modify the spheres
     GTform testMatrix1, testMatrix2, testMatrix3;
-    testMatrix1.SetTransform(qbVector<double>{std::vector<double>{-1.5, 0.0, 0.0}},
+    testMatrix1.SetTransform(qbVector<double>{std::vector<double>{-1.75, 0.0, 0.0}},
                              qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-                             qbVector<double>{std::vector<double>{0.5, 0.5, 0.75}});
+                             qbVector<double>{std::vector<double>{0.5, 0.5, 0.5}});
 
     testMatrix2.SetTransform(qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
                              qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-                             qbVector<double>{std::vector<double>{0.75, 0.5, 0.5}});
+                             qbVector<double>{std::vector<double>{0.5, 0.5, 0.5}});
 
-    testMatrix3.SetTransform(qbVector<double>{std::vector<double>{1.5, 0.0, 0.0}},
+    testMatrix3.SetTransform(qbVector<double>{std::vector<double>{2.0, 0.0, 0.0}},
                              qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-                             qbVector<double>{std::vector<double>{0.75, 0.75, 0.75}});
+                             qbVector<double>{std::vector<double>{0.5, 0.5, 0.5}});
 
     m_objectVec.at(0)->SetTransformMatrix(testMatrix1);
     m_objectVec.at(1)->SetTransformMatrix(testMatrix2);
@@ -51,6 +59,11 @@ Scene::Scene()
     m_objectVec.at(0)->m_baseColor = qbVector<double>{std::vector<double>{0.25, 0.5, 0.8}};
     m_objectVec.at(1)->m_baseColor = qbVector<double>{std::vector<double>{1.0, 0.5, 0.0}};
     m_objectVec.at(2)->m_baseColor = qbVector<double>{std::vector<double>{1.0, 0.8, 0.0}};
+
+    //assign the materials to objects
+    m_objectVec.at(0)-> AssignMaterial(TestMaterial);
+
+
 
     // Construct a test light.
     m_lightVec.push_back(std::make_shared<PointLight>(PointLight()));
@@ -97,60 +110,63 @@ bool Scene::Render(Image &outputImage)
             qbVector<double> closestIntPoint{3};
             qbVector<double> closestLocalNormal{3};
             qbVector<double> closestLocalColor{3};
-            double minDist = std::numeric_limits<double>::max();
-            bool intersectionFound = false;
-            for (auto currentObject : m_objectVec)
-            {
-                bool validInt = currentObject->TestIntersections(cameraRay, intPoint, localNormal, localColor);
-                if (validInt)
-                {
-                    // set the flag to indicate that we found an intersection
-                    intersectionFound = true;
+            bool intersectionFound = CastRay(cameraRay, closestObject, closestIntPoint, closestLocalNormal, closestLocalColor);
 
-                    // compute the distance between the camera and the point of intersection
-                    double dist = (intPoint - cameraRay.m_point1).norm();
-
-                    // if this object is closer to the camera than any other that we see, then store a reference to it
-                    if (dist < minDist)
-                    {
-                        minDist = dist;
-                        closestObject = currentObject;
-                        closestIntPoint = intPoint;
-                        closestLocalNormal = localNormal;
-                        closestLocalColor = localColor;
-                    }
-                }
-            }
             // compute the illumination for the closest object, assuming there was a valid intersection
             if (intersectionFound)
             {
-                double intensity;
-                qbVector<double> color{3};
-                double red = 0.0;
-                double green = 0.0;
-                double blue = 0.0;
-                bool validIllum = false;
-                bool illumFound = false;
-                for (auto currentLight : m_lightVec)
+                // check if the object has a material
+                if (closestObject->m_hasMaterial)
                 {
-                    validIllum = currentLight->ComputeIllumination(closestIntPoint, closestLocalNormal, m_objectVec, closestObject, color, intensity);
-                    if (validIllum)
-                    {
-                        illumFound = true;
-                        red += color.GetElement(0) * intensity;
-                        green += color.GetElement(1) * intensity;
-                        blue += color.GetElement(2) * intensity;
-                    }
+                    // use the material to compute the color
+                    qbVector<double> color = closestObject->m_pMaterial->ComputeColor(m_objectVec, m_lightVec,
+                                                                                      closestObject, closestIntPoint,
+                                                                                      closestLocalNormal, cameraRay);
+                    outputImage.SetPixel(x, y, color.GetElement(0), color.GetElement(1), color.GetElement(2));
                 }
-                if (illumFound)
+                else
                 {
-                    red *= closestLocalColor.GetElement(0);
-                    green *= closestLocalColor.GetElement(1);
-                    blue *= closestLocalColor.GetElement(2);
-                    outputImage.SetPixel(x, y, red, green, blue);
+                    // use the basic method to compute the color
+                    qbVector<double> matColor = MaterialBase::ComputeDiffuseColor(m_objectVec, m_lightVec,
+                                                                                  closestObject, closestIntPoint,
+                                                                                  closestLocalNormal, closestObject->m_baseColor);
+                    outputImage.SetPixel(x, y, matColor.GetElement(0), matColor.GetElement(1), matColor.GetElement(2));
                 }
             }
         }
     }
     return true;
+}
+
+bool Scene::CastRay(Ray &castRay, std::shared_ptr<ObjectBase> &closestObject, qbVector<double> &closestIntPoint,
+                    qbVector<double> &closestLocalNormal, qbVector<double> &closestLocalColor)
+{
+    qbVector<double> intPoint{3};
+    qbVector<double> localNormal{3};
+    qbVector<double> localColor{3};
+    double minDist = std::numeric_limits<double>::max();
+    bool intersectionFound = false;
+    for (auto currentObject : m_objectVec)
+    {
+        bool validInt = currentObject->TestIntersections(castRay, intPoint, localNormal, localColor);
+        if (validInt)
+        {
+            // set the flag to indicate that we found an intersection
+            intersectionFound = true;
+
+            // compute the distance between the camera and the point of intersection
+            double dist = (intPoint - castRay.m_point1).norm();
+
+            // if this object is closer to the camera than any other that we see, then store a reference to it
+            if (dist < minDist)
+            {
+                minDist = dist;
+                closestObject = currentObject;
+                closestIntPoint = intPoint;
+                closestLocalNormal = localNormal;
+                closestLocalColor = localColor;
+            }
+        }
+    }
+    return intersectionFound;
 }

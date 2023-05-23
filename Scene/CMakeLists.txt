@@ -4,13 +4,15 @@ add_library(Scene Scene.cpp Scene.hpp
             ../Image/Image.hpp ../Image/Image.cpp 
             ../Objects/ObjSphere.hpp ../Objects/ObjSphere.cpp
             ../Objects/ObjectPlane.hpp ../Objects/ObjectPlane.cpp
-            ../Light/PointLight.hpp ../Light/PointLight.cpp)
+            ../Light/PointLight.hpp ../Light/PointLight.cpp
+            ../Material/SimpleMaterial.hpp ../Material/SimpleMaterial.cpp )
 
 # Include directories
 target_include_directories(Scene PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 include_directories(Image)
 include_directories(Camera)
+include_directories(Material)
 
 # Set any necessary compile options
 target_compile_options(Scene PUBLIC -Wall -Wextra)

@@ -1,5 +1,6 @@
 # Ray Tracing
 
+to compile using cmake 
 This is a C++ Ray Tracing project that utilizes the SDL2 library for graphical output. 
 
 ## Prerequisites 
